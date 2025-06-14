@@ -5,12 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  ScrollView,
   StyleSheet,
   SafeAreaView,
   Animated,
+  Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ComposioMultiAgent = () => {
+const MultiAgentHub = () => {
   const [userInput, setUserInput] = useState(
     "I need to create a meeting agenda, share it with the team via email, check for any calendar conflicts next week, and pull the latest sales data from our dashboard."
   );
@@ -176,16 +179,19 @@ const ComposioMultiAgent = () => {
         ListHeaderComponent={
           <>
             <View style={styles.header}>
-              <Text style={styles.headerTitle}>Composio Multi-Agent Hub</Text>
-              <View style={styles.headerButtons}>
-                <TouchableOpacity style={styles.settingsButton}>
-                  <Text style={styles.settingsButtonText}>Agent Settings</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.newRequestButton}>
-                  <Text style={styles.newRequestButtonText}>New Request</Text>
-                </TouchableOpacity>
-              </View>
+            {/* Title */}
+            <Text style={styles.headerTitle}>Multi-Agent Hub</Text>
+
+            {/* Buttons Container */}
+            <View style={styles.headerButtons}>
+              <TouchableOpacity style={styles.settingsButton}>
+                <Text style={styles.settingsButtonText}>Settings</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.newRequestButton}>
+                <Text style={styles.newRequestButtonText}>New Request</Text>
+              </TouchableOpacity>
             </View>
+          </View>
 
             <View style={styles.inputContainer}>
               <TextInput
@@ -194,6 +200,7 @@ const ComposioMultiAgent = () => {
                 value={userInput}
                 onChangeText={setUserInput}
                 placeholder="Enter your request..."
+                placeholderTextColor="#9CA3AF"
               />
               <TouchableOpacity style={styles.processButton}>
                 <Text style={styles.processButtonText}>Process</Text>
@@ -211,13 +218,18 @@ const ComposioMultiAgent = () => {
             <View style={styles.suggestionsHeader}>
               <Text style={styles.suggestionsTitle}>Suggested Next Actions</Text>
             </View>
-            <FlatList
-              data={suggestions}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderSuggestionItem}
-              horizontal
-              contentContainerStyle={styles.suggestionsContent}
-            />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.suggestionsContent}>
+                {suggestions.map((suggestion, index) => (
+                  <TouchableOpacity
+                    key={index} // Use index as key
+                    style={styles.suggestionButton}
+                  >
+                    <Text style={styles.suggestionText}>{suggestion}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
           </View>
         }
       />
@@ -228,43 +240,54 @@ const ComposioMultiAgent = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F9FAFB',
   },
   header: {
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'row', // Align items horizontally
+    justifyContent: 'space-between', // Space between title and buttons
+    alignItems: 'center', // Center items vertically
+    paddingHorizontal: 16, // Add horizontal padding
+    paddingVertical: 12, // Add vertical padding
+    backgroundColor: '#ffffff', // Set background color
+    borderBottomWidth: 1, // Add a border at the bottom
+    borderBottomColor: '#e0e0e0', // Border color
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 20, // Increase font size
+    fontWeight: 'bold', // Make the title bold
+    color: '#333333', // Set text color
   },
   headerButtons: {
-    flexDirection: 'row',
-    gap: 8,
+    flexDirection: 'row', // Align buttons horizontally
+    gap: 8, // Add space between buttons
   },
   settingsButton: {
-    backgroundColor: '#EEF2FF',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingHorizontal: 12, // Add horizontal padding
+    paddingVertical: 8, // Add vertical padding
+    backgroundColor: '#f0f0f0', // Set background color
+    borderRadius: 8, // Add rounded corners
   },
   settingsButtonText: {
-    color: '#4F46E5',
+    fontSize: 14, // Set font size
+    color: '#333333', // Set text color
   },
   newRequestButton: {
-    backgroundColor: '#2563EB',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingHorizontal: 12, // Add horizontal padding
+    paddingVertical: 8, // Add vertical padding
+    backgroundColor: '#4F46E5', // Set background color
+    borderRadius: 8, // Add rounded corners
   },
   newRequestButtonText: {
-    color: '#fff',
+    fontSize: 14, // Set font size
+    color: '#ffffff', // Set text color
+    fontWeight: '500', // Make text semi-bold
   },
   inputContainer: {
     padding: 16,
     gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
   },
   input: {
     borderWidth: 1,
@@ -273,19 +296,22 @@ const styles = StyleSheet.create({
     padding: 12,
     height: 100,
     textAlignVertical: 'top',
+    backgroundColor: '#F9FAFB',
+    fontSize: 14,
+    color: '#1F2937',
   },
   processButton: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#4F46E5',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   processButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: '500',
   },
   taskHubHeader: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FFFFFF',
     padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -294,16 +320,33 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   taskHubTitle: {
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
   },
   taskCount: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#6B7280',
   },
   taskItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
     padding: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginHorizontal: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   taskHeader: {
     flexDirection: 'row',
@@ -329,16 +372,19 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   taskTitle: {
+    fontSize: 16,
     fontWeight: '500',
+    color: '#1F2937',
   },
   agentBadge: {
     backgroundColor: '#F3F4F6',
-    paddingVertical: 2,
+    paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
   },
   agentText: {
     fontSize: 12,
+    color: '#6B7280',
   },
   resultContainer: {
     marginTop: 8,
@@ -350,6 +396,7 @@ const styles = StyleSheet.create({
   },
   resultText: {
     fontSize: 14,
+    color: '#065F46',
   },
   confirmationContainer: {
     marginTop: 8,
@@ -361,9 +408,11 @@ const styles = StyleSheet.create({
   },
   recipientsText: {
     fontSize: 14,
+    color: '#854D0E',
   },
   subjectText: {
     fontSize: 14,
+    color: '#854D0E',
     marginBottom: 8,
   },
   confirmationButtons: {
@@ -377,7 +426,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   approveButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 14,
   },
   editButton: {
@@ -436,12 +485,22 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
   },
   suggestionsContainer: {
+    backgroundColor: '#FFFFFF',
+    margin: 16,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   suggestionsHeader: {
     backgroundColor: '#F3F4F6',
@@ -450,12 +509,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   suggestionsTitle: {
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
   },
   suggestionsContent: {
     padding: 16,
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
   },
   suggestionButton: {
@@ -470,4 +530,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ComposioMultiAgent;
+export default MultiAgentHub;

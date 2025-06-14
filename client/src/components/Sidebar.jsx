@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MessageSquare, Mic, Settings, User, BarChart2, Globe, Zap, Layers } from 'lucide-react';
 
@@ -70,11 +71,11 @@ const Sidebar = () => {
       <div className="p-4 mt-auto border-t border-indigo-800">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white font-medium mr-3">
-            JD
+            VB
           </div>
           <div>
-            <div className="font-medium">Jamie Doe</div>
-            <div className="text-xs text-indigo-300">Premium Plan</div>
+            <div className="font-medium">Vinayak Bhatia</div>
+            <div className="text-xs text-indigo-300">Free Plan</div>
           </div>
         </div>
       </div>
@@ -83,3 +84,5 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+

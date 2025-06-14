@@ -5,9 +5,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SafeAreaView, StyleSheet } from 'react-native'; // Import SafeAreaView
 
 import { useColorScheme } from '../hooks/useColorScheme';
-// import WakeWordListener from './screens/WakeWordListener'; // Wake word detection
 
 // Prevent splash screen from auto-hiding before assets are loaded
 SplashScreen.preventAutoHideAsync();
@@ -30,11 +30,21 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="screens/ConfirmScreen" options={{ title: "Confirm Action" }} />
-      </Stack>
-      <StatusBar style="auto" />
+      {/* Wrap the entire app with SafeAreaView */}
+      <SafeAreaView style={styles.container}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="screens/ConfirmScreen" options={{ title: "Confirm Action" }} />
+        </Stack>
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      </SafeAreaView>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Ensure the SafeAreaView takes up the full screen
+    paddingTop: 40
+  }
+});

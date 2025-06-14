@@ -1,33 +1,45 @@
 {
-    "manifest_version": 3,
-    "name": "Agent Extension",
-    "version": "1.0",
-    "description": "An extension to send selected text to the backend for processing.",
-    "permissions": ["activeTab", "contextMenus", "storage", "notifications"],
-    "host_permissions": [
+  "manifest_version": 3,
+  "name": "Agent Extension",
+  "version": "1.0",
+  "description": "An extension to send selected text to the backend for processing.",
+  "permissions": [
+      "activeTab",
+      "contextMenus",
+      "storage",
+      "notifications"
+  ],
+  "host_permissions": [
       "http://localhost:5002/*",
-      "http://localhost/*"
-    ],
-    "background": {
+      "http://localhost/*",
+      "https://b514-2402-3a80-1650-cc11-954a-b6f6-b161-17a3.ngrok-free.app/*",
+      "http://b514-2402-3a80-1650-cc11-954a-b6f6-b161-17a3.ngrok-free.app/*"
+  ],
+  "background": {
       "service_worker": "background.js"
-    },
-    "action": {
+  },
+  "action": {
       "default_popup": "popup.html",
       "default_icon": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
+          "16": "icons/icon16.png",
+          "48": "icons/icon48.png",
+          "128": "icons/icon128.png"
       }
-    },
-    "icons": {
+  },
+  "icons": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
-    },
-    "content_scripts": [
+  },
+  "content_scripts": [
       {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
+          "matches": ["<all_urls>"],
+          "js": ["content.js"],
+          "css": ["styles.css"]
       }
-    ]
-  }
+  ],
+  "web_accessible_resources": [{
+      "resources": ["icons/translate.png","sidebar.js"],
+      "matches": ["<all_urls>"]
+  }]
+}

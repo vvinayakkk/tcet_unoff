@@ -87,3 +87,81 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     return true;
 });
+
+// Add this to your existing background.js
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "translate") {
+      fetch('https://b514-2402-3a80-1650-cc11-954a-b6f6-b161-17a3.ngrok-free.app/api/translate', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Origin': chrome.runtime.getURL(''),
+              // Add any additional headers your API requires
+          },
+          mode: 'cors', // Explicitly state CORS mode
+          credentials: 'omit', // Don't send cookies
+          body: JSON.stringify({
+              source_language: request.sourceLang,
+              target_language: request.targetLang,
+              text: request.text
+          })
+      })
+      .then(async response => {
+          if (!response.ok) {
+              // Try to get error message from response
+              const errorText = await response.text();
+              throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Translation response:', data); // Debug log
+          if (!data.translated_text) {
+              throw new Error('No translation received from server');
+          }
+          
+          latestResult = {
+              original: request.text,
+              translated: data.translated_text,
+              sourceLang: request.sourceLang,
+              targetLang: request.targetLang
+          };
+          
+          chrome.notifications.create({
+              type: 'basic',
+              iconUrl: 'icons/icon48.png',
+              title: 'Translation Complete',
+              message: 'Click the extension icon to view translation'
+          });
+      })
+      .catch(error => {
+          console.error('Translation error details:', {
+              message: error.message,
+              stack: error.stack,
+              request: {
+                  sourceLang: request.sourceLang,
+                  targetLang: request.targetLang,
+                  textLength: request.text.length
+              }
+          });
+          
+          latestResult = { 
+              error: `Translation failed: ${error.message}`,
+              details: {
+                  sourceLang: request.sourceLang,
+                  targetLang: request.targetLang
+              }
+          };
+          
+          chrome.notifications.create({
+              type: 'basic',
+              iconUrl: 'icons/icon48.png',
+              title: 'Translation Error',
+              message: `Failed to translate: ${error.message}`
+          });
+      });
+  }
+  return true; // Keep the message channel open for async response
+});

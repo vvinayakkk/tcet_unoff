@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
@@ -13,6 +14,8 @@ import CommunicationsPage from './pages/Communication';
 import AgentLearningDashboard from './pages/agentLearning';
 import UserPreferencesPage from './pages/userPrefrences';
 import SettingsPage from './pages/Settings';
+import UnifiedChatbot from './pages/comapnian';
+import NotionAIApp from './pages/Notionai';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,7 +23,7 @@ function App() {
   return (
     <>
       {/* Move GTranslate outside of Routes */}
-      <GTranslate /> 
+      
 
       <Routes>
         <Route path='/' element={<Home />} />
@@ -32,9 +35,12 @@ function App() {
         <Route path='/learning' element={<AgentLearningDashboard />} />
         <Route path='/preference' element={<UserPreferencesPage />} />
         <Route path='/settings' element={<SettingsPage />} />
+        <Route path='/companian' element={<UnifiedChatbot />} />
+        <Route path='/notion' element={<NotionAIApp />} />
       </Routes>
     </>
   );
 }
 
 export default App;
+

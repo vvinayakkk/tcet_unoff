@@ -11,8 +11,6 @@ import {
   Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 
 const IconButton = ({ name, size = 20, color = "#666" }) => (
@@ -139,24 +137,26 @@ const Dashboard = () => {
   const [offlineStatus, setOfflineStatus] = useState({});
   const [learningProgress, setLearningProgress] = useState({});
 
+  const API_URL ='http://192.168.202.60:6001';
+
   const fetchDashboardData = async () => {
     try {
-      const statsResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/stats');
+      const statsResponse = await axios.get(`${API_URL}/api/dashboard/stats`);
       setPerformanceMetrics(statsResponse.data);
 
-      const commsResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/recent-communications');
+      const commsResponse = await axios.get(`${API_URL}/api/dashboard/recent-communications`);
       setRecentCommunications(Array.isArray(commsResponse.data) ? commsResponse.data : []);
 
-      const suggestionsResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/context-suggestions');
+      const suggestionsResponse = await axios.get(`${API_URL}/api/dashboard/context-suggestions`);
       setContextSuggestions(Array.isArray(suggestionsResponse.data) ? suggestionsResponse.data : []);
 
-      const languagesResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/language-distribution');
+      const languagesResponse = await axios.get(`${API_URL}/api/dashboard/language-distribution`);
       setRecentLanguages(Array.isArray(languagesResponse.data.languages) ? languagesResponse.data.languages : []);
 
-      const offlineResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/offline-status?user_id=67b7a32acc78837076f0a7d6');
+      const offlineResponse = await axios.get(`${API_URL}/api/dashboard/offline-status?user_id=67b7a32acc78837076f0a7d6`);
       setOfflineStatus(offlineResponse.data || {});
 
-      const progressResponse = await axios.get('http://192.168.5.224:6001/api/dashboard/learning-progress');
+      const progressResponse = await axios.get(`${API_URL}/api/dashboard/learning-progress`);
       setLearningProgress(progressResponse.data || {});
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -282,7 +282,7 @@ const Dashboard = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>AI Learning Progress</Text>
           {['voice_pattern_recognition', 'contextual_understanding', 'translation_precision'].map((key) => (
-            <View key={key} style={styles.progressSection}> // Add key prop
+            <View key={key} style={styles.progressSection}> 
               <Text style={styles.progressTitle}>
                 {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
               </Text>
@@ -290,7 +290,7 @@ const Dashboard = () => {
                 <View 
                   style={[
                     styles.progressBar,
-                    { width:`${formatNumber(learningProgress[key]?.accuracy || 0)}% `}
+                    { width: `${formatNumber(learningProgress[key]?.accuracy || 0)}%` }
                   ]} 
                 />
               </View>
@@ -590,59 +590,5 @@ improvementText: {
 },
 });
 
-// Create bottom tab navigator
-const Tab = createBottomTabNavigator();
-
-const AppNavigator = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: 'white',
-          borderTopWidth: 1,
-          borderTopColor: '#E5E7EB',
-          paddingBottom: Platform.OS === 'ios' ? SPACING.md : SPACING.sm,
-          paddingTop: SPACING.xs,
-          height: Platform.OS === 'ios' ? 85 : 65,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginTop: -5,
-        },
-        tabBarActiveTintColor: '#4F46E5',
-        tabBarInactiveTintColor: '#6B7280',
-      }}
-    >
-      <Tab.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="view-dashboard" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Messages"
-        component={Dashboard}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="message-text" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Dashboard}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="cog" size={size} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
-
-// Export AppNavigator directly, without wrapping in NavigationContainer
-export default AppNavigator;
+// Export the Dashboard component directly
+export default Dashboard;

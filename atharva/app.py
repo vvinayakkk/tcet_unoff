@@ -158,7 +158,7 @@ def transcribe():
         logger.info(f"Detected language: {detected_language} (code: {language_code})")
 
         # Make request to the transcription service
-        transcription_url = "https://ac77-35-185-196-1.ngrok-free.app/transcribe/"
+        transcription_url = "https://fb5c-34-105-97-21.ngrok-free.app/transcribe/"
         
         with open(processing_path, 'rb') as audio_file:
             files = {
