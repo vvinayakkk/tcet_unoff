@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookSquare, FaTwitterSquare, FaGithubSquare } from "react-icons/fa";
@@ -6,13 +7,14 @@ import { FaGoogle, FaFacebookSquare, FaTwitterSquare, FaGithubSquare } from "rea
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
   const AUTH_BACKEND_URL = import.meta.env.VITE_GOOGLE_AUTH_SERVER;
   const COMPOSIO_API_KEY = import.meta.env.VITE_COMPOSIO_API_KEY;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    navigate("/dashboard")
     // try {
     //   const userCredential = await signInWithEmailAndPassword(auth, email, password);
     //   const userDoc = await getDoc(doc(db, "Users", userCredential.user.uid));
@@ -30,6 +32,7 @@ function Login() {
   };
 
   const handleGoogleAuth = async () => {
+    setIsGoogleLoading(true);
     localStorage.setItem('composio-api-key', COMPOSIO_API_KEY);
 
     try {
@@ -55,6 +58,7 @@ function Login() {
 
     } catch (err) {
       console.error("Error:", err);
+      setIsGoogleLoading(false);
     } 
   };
 
@@ -101,11 +105,22 @@ function Login() {
 
         <button
           onClick={handleGoogleAuth}
-          className="w-full py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors flex items-center justify-center gap-2"
+          disabled={isGoogleLoading}
+          className={`w-full py-3 relative bg-white border-2 border-gray-200 
+            text-gray-700 rounded-lg transition-all duration-300
+            hover:shadow-md hover:border-gray-300 hover:bg-gray-50
+            active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed
+            flex items-center justify-center gap-3`}
         >
-
-          <FaGoogle size={24} className="text-gray-600" />
-          Sign in with Google
+          <FaGoogle size={20} className="text-gray-600" />
+          {isGoogleLoading ? (
+            <>
+              <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-gray-500 border-t-gray-200 mr-2"></span>
+              Connecting...
+            </>
+          ) : (
+            "Sign in with Google"
+          )}
         </button>
 
         <p className="text-center text-sm text-gray-600 mt-4">
@@ -116,4 +131,5 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login;
+
