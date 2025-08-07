@@ -1,4 +1,4 @@
-# 🚀 TCET Unofficial - AI-Powered Productivity Suite
+# 🚀Giga Brain - AI-Powered Productivity Suite
 <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/288549a9-1268-4f35-9d84-dc3e8aa78e44" />
 
 <div align="center">
